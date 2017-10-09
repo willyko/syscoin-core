@@ -27,13 +27,13 @@ afterEach(() => {
 });
 
 describe('Client', () => {
-  const client = new Client(config.bitcoind);
+  const client = new Client(config.syscoind);
 
   describe('constructor', () => {
     it('should throw an error if network is invalid', () => {
       try {
         /*eslint-disable*/
-        new Client(_.defaults({ network: 'foo' }, config.bitcoind));
+        new Client(_.defaults({ network: 'foo' }, config.syscoind));
         /*eslint-enable*/
 
         should.fail();
@@ -92,7 +92,7 @@ describe('Client', () => {
   describe('authentication', () => {
     it('should throw an error if credentials are invalid', async () => {
       try {
-        await new Client(_.defaults({ password: 'biz', username: 'foo' }, config.bitcoind)).getDifficulty();
+        await new Client(_.defaults({ password: 'biz', username: 'foo' }, config.syscoind)).getDifficulty();
       } catch (e) {
         e.should.be.an.instanceOf(RpcError);
         e.message.should.equal('Unauthorized');
@@ -102,7 +102,7 @@ describe('Client', () => {
     });
 
     it('should support username only authentication', async () => {
-      const difficulty = await new Client(config.bitcoindUsernameOnly).getDifficulty();
+      const difficulty = await new Client(config.syscoindUsernameOnly).getDifficulty();
 
       difficulty.should.equal(0);
     });
@@ -114,7 +114,7 @@ describe('Client', () => {
 
       _.times(5, batch.push({ method: 'getnewaddress' }));
 
-      const addresses = await new Client(config.bitcoind).command(batch);
+      const addresses = await new Client(config.syscoind).command(batch);
 
       addresses.should.have.length(batch.length);
     });
@@ -122,7 +122,7 @@ describe('Client', () => {
     it('should support batch request parameters', async () => {
       const batch = [{ method: 'getnewaddress' }, { method: 'validateaddress', parameters: ['mkteeBFmGkraJaWN5WzqHCjmbQWVrPo5X3'] }];
 
-      const [newAddress, addressValidation] = await new Client(config.bitcoind).command(batch);
+      const [newAddress, addressValidation] = await new Client(config.syscoind).command(batch);
 
       addressValidation.should.have.properties('address', 'isvalid', 'ismine', 'scriptPubKey');
       newAddress.should.be.a.String();
@@ -131,14 +131,14 @@ describe('Client', () => {
 
   describe('headers', () => {
     it('should return the response headers if `headers` is enabled', async () => {
-      const [info, headers] = await new Client(_.defaults({ headers: true }, config.bitcoind)).getInfo();
+      const [info, headers] = await new Client(_.defaults({ headers: true }, config.syscoind)).getInfo();
 
       info.should.be.an.Object();
       headers.should.have.keys('date', 'connection', 'content-length', 'content-type');
     });
 
     it('should return the response headers if `headers` is enabled using callbacks', done => {
-      new Client(_.defaults({ headers: true }, config.bitcoind)).getInfo((err, [info, headers]) => {
+      new Client(_.defaults({ headers: true }, config.syscoind)).getInfo((err, [info, headers]) => {
         should.not.exist(err);
 
         info.should.be.an.Object();
@@ -154,7 +154,7 @@ describe('Client', () => {
 
       _.times(5, () => batch.push({ method: 'getnewaddress' }));
 
-      const [addresses, headers] = await new Client(_.defaults({ headers: true }, config.bitcoind)).command(batch);
+      const [addresses, headers] = await new Client(_.defaults({ headers: true }, config.syscoind)).command(batch);
 
       addresses.should.have.length(batch.length);
       headers.should.have.keys('date', 'connection', 'content-length', 'content-type');
@@ -165,7 +165,7 @@ describe('Client', () => {
 
       _.times(5, () => batch.push({ method: 'getnewaddress' }));
 
-      new Client(_.defaults({ headers: true }, config.bitcoind)).command(batch, (err, [addresses, headers]) => {
+      new Client(_.defaults({ headers: true }, config.syscoind)).command(batch, (err, [addresses, headers]) => {
         should.not.exist(err);
 
         addresses.should.have.length(batch.length);
@@ -189,7 +189,7 @@ describe('Client', () => {
 
     describe('getBalance()', () => {
       it('should return the total server\'s balance', async () => {
-        const balance = await new Client(config.bitcoind).getBalance();
+        const balance = await new Client(config.syscoind).getBalance();
 
         balance.should.be.a.Number();
       });
@@ -197,7 +197,7 @@ describe('Client', () => {
 
     describe('getDifficulty()', () => {
       it('should return the proof-of-work difficulty', async () => {
-        const difficulty = await new Client(config.bitcoind).getDifficulty();
+        const difficulty = await new Client(config.syscoind).getDifficulty();
 
         difficulty.should.be.a.String();
       });
@@ -205,7 +205,7 @@ describe('Client', () => {
 
     describe('getInfo()', () => {
       it('should return information about the node and the network', async () => {
-        const info = await new Client(config.bitcoind).getInfo();
+        const info = await new Client(config.syscoind).getInfo();
 
         info.should.not.be.empty();
         info.errors.should.be.a.String();
@@ -213,7 +213,7 @@ describe('Client', () => {
     });
 
     describe('getNewAddress()', () => {
-      it('should return a new bitcoin address', async () => {
+      it('should return a new syscoin address', async () => {
         await client.getNewAddress('test');
 
         const addresses = await client.getAddressesByAccount('test');
@@ -224,7 +224,7 @@ describe('Client', () => {
 
     describe('help()', () => {
       it('should return help', async () => {
-        const help = await new Client(config.bitcoind).help();
+        const help = await new Client(config.syscoind).help();
 
         help.should.not.be.empty();
       });
@@ -232,13 +232,13 @@ describe('Client', () => {
 
     describe('listTransactions()', () => {
       it('should return the most recent list of transactions from all accounts using specific count', async () => {
-        const transactions = await new Client(config.bitcoind).listTransactions('test', 15);
+        const transactions = await new Client(config.syscoind).listTransactions('test', 15);
 
         transactions.should.be.an.Array().and.empty();
       });
 
       it('should return the most recent list of transactions from all accounts using default count', async () => {
-        const transactions = await new Client(config.bitcoind).listTransactions('test');
+        const transactions = await new Client(config.syscoind).listTransactions('test');
 
         transactions.should.be.an.Array().and.empty();
       });
@@ -247,13 +247,13 @@ describe('Client', () => {
 
   describe('ssl', () => {
     it('should use `ssl.strict` by default when `ssl` is enabled', () => {
-      const sslClient = new Client(_.defaults({ host: config.bitcoindSsl.host, port: config.bitcoindSsl.port, ssl: true }, config.bitcoind));
+      const sslClient = new Client(_.defaults({ host: config.syscoindSsl.host, port: config.syscoindSsl.port, ssl: true }, config.syscoind));
 
       sslClient.ssl.strict.should.be.true();
     });
 
     it('should throw an error if certificate is self signed by default', async () => {
-      const sslClient = new Client(_.defaults({ host: config.bitcoindSsl.host, port: config.bitcoindSsl.port, ssl: true }, config.bitcoind));
+      const sslClient = new Client(_.defaults({ host: config.syscoindSsl.host, port: config.syscoindSsl.port, ssl: true }, config.syscoind));
 
       sslClient.ssl.strict.should.be.true();
 
@@ -277,10 +277,10 @@ describe('Client', () => {
             return;
           }
         },
-        host: config.bitcoindSsl.host,
-        port: config.bitcoindSsl.port,
+        host: config.syscoindSsl.host,
+        port: config.syscoindSsl.port,
         ssl: true
-      }, config.bitcoind));
+      }, config.syscoind));
 
       const info = await sslClient.getInfo();
 
@@ -288,7 +288,7 @@ describe('Client', () => {
     });
 
     it('should establish a connection if certificate is self signed but `ssl.strict` is disabled', async () => {
-      const sslClient = new Client(_.defaults({ host: config.bitcoindSsl.host, port: config.bitcoindSsl.port, ssl: { enabled: true, strict: false } }, config.bitcoind));
+      const sslClient = new Client(_.defaults({ host: config.syscoindSsl.host, port: config.syscoindSsl.port, ssl: { enabled: true, strict: false } }, config.syscoind));
       const info = await sslClient.getInfo();
 
       info.should.not.be.empty();
@@ -296,13 +296,13 @@ describe('Client', () => {
   });
 
   it('should have all the methods listed by `help`', async () => {
-    const help = await new Client(config.bitcoind).help();
+    const help = await new Client(config.syscoind).help();
 
     _.difference(parse(help), _.invokeMap(Object.keys(methods), String.prototype.toLowerCase)).should.be.empty();
   });
 
   it('should support callbacks', done => {
-    new Client(config.bitcoind).help((err, help) => {
+    new Client(config.syscoind).help((err, help) => {
       should.not.exist(err);
 
       help.should.not.be.empty();
@@ -313,7 +313,7 @@ describe('Client', () => {
 
   it('should throw an error if timeout is reached', async () => {
     try {
-      await new Client(_.defaults({ timeout: 0.1 }, config.bitcoind)).listAccounts();
+      await new Client(_.defaults({ timeout: 0.1 }, config.syscoind)).listAccounts();
 
       should.fail();
     } catch (e) {
@@ -334,28 +334,28 @@ describe('Client', () => {
   });
 
   it('should throw an error with a generic message if one is not returned on the response', async () => {
-    nock(`http://${config.bitcoind.host}:${config.bitcoind.port}/`)
+    nock(`http://${config.syscoind.host}:${config.syscoind.port}/`)
       .post('/')
       .reply(200, '{ "result": null, "error": { "code": -32601 }, "id": "69837016239933"}');
 
     try {
-      await new Client(config.bitcoind).command('foobar');
+      await new Client(config.syscoind).command('foobar');
 
       should.fail();
     } catch (e) {
       e.should.be.an.instanceOf(RpcError);
-      e.message.should.equal('An error occurred while processing the RPC call to bitcoind');
+      e.message.should.equal('An error occurred while processing the RPC call to syscoind');
       e.code.should.equal(-32601);
     }
   });
 
   it('should throw an error if the response does not include a `result`', async () => {
-    nock(`http://${config.bitcoind.host}:${config.bitcoind.port}/`)
+    nock(`http://${config.syscoind.host}:${config.syscoind.port}/`)
       .post('/')
       .reply(200, '{ "error": null, "id": "69837016239933"}');
 
     try {
-      await new Client(config.bitcoind).command('foobar2');
+      await new Client(config.syscoind).command('foobar2');
 
       should.fail();
     } catch (e) {
@@ -367,7 +367,7 @@ describe('Client', () => {
 
   it('should throw an error if a connection cannot be established', async () => {
     try {
-      await new Client(_.defaults({ port: 9897 }, config.bitcoind)).getDifficulty();
+      await new Client(_.defaults({ port: 9897 }, config.syscoind)).getDifficulty();
 
       should.fail();
     } catch (e) {
@@ -465,7 +465,7 @@ describe('Client', () => {
 
     describe('getBlockchainInformation()', () => {
       it('should return blockchain information json-encoded by default', async () => {
-        const information = await new Client(config.bitcoind).getBlockchainInformation();
+        const information = await new Client(config.syscoind).getBlockchainInformation();
 
         information.should.have.properties('bestblockhash', 'blocks', 'chain', 'chainwork', 'difficulty', 'headers', 'pruned', 'verificationprogress');
       });
@@ -473,7 +473,7 @@ describe('Client', () => {
 
     describe('getUnspentTransactionOutputs()', () => {
       it('should return unspent transaction outputs hex-encoded if extension is `bin`', async () => {
-        const result = await new Client(config.bitcoind).getUnspentTransactionOutputs([{
+        const result = await new Client(config.syscoind).getUnspentTransactionOutputs([{
           id: '0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206',
           index: 0
         }, {
@@ -485,7 +485,7 @@ describe('Client', () => {
       });
 
       it('should return unspent transaction outputs hex-encoded if extension is `hex`', async () => {
-        const result = await new Client(config.bitcoind).getUnspentTransactionOutputs([{
+        const result = await new Client(config.syscoind).getUnspentTransactionOutputs([{
           id: '0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206',
           index: 0
         }, {
@@ -497,7 +497,7 @@ describe('Client', () => {
       });
 
       it('should return unspent transaction outputs json-encoded by default', async () => {
-        const result = await new Client(config.bitcoind).getUnspentTransactionOutputs([{
+        const result = await new Client(config.syscoind).getUnspentTransactionOutputs([{
           id: '0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206',
           index: 0
         }, {
@@ -512,7 +512,7 @@ describe('Client', () => {
 
     describe('getMemoryPoolContent()', () => {
       it('should return memory pool content json-encoded by default', async () => {
-        const content = await new Client(config.bitcoind).getMemoryPoolContent();
+        const content = await new Client(config.syscoind).getMemoryPoolContent();
 
         content.should.eql({});
       });
@@ -520,7 +520,7 @@ describe('Client', () => {
 
     describe('getMemoryPoolInformation()', () => {
       it('should return memory pool information json-encoded by default', async () => {
-        const information = await new Client(config.bitcoind).getMemoryPoolInformation();
+        const information = await new Client(config.syscoind).getMemoryPoolInformation();
 
         information.should.eql({
           bytes: 0,

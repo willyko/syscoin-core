@@ -88,7 +88,7 @@ class Client {
     var _ref$host = _ref.host;
     let host = _ref$host === undefined ? 'localhost' : _ref$host;
     var _ref$logger = _ref.logger;
-    let logger = _ref$logger === undefined ? (0, _debugnyan2.default)('bitcoin-core') : _ref$logger;
+    let logger = _ref$logger === undefined ? (0, _debugnyan2.default)('syscoin-core') : _ref$logger;
     var _ref$network = _ref.network;
     let network = _ref$network === undefined ? 'mainnet' : _ref$network,
         password = _ref.password,
@@ -166,7 +166,8 @@ class Client {
 
       return this.request.postAsync({
         auth: _lodash2.default.pickBy(this.auth, _lodash2.default.identity),
-        body: body,
+        body: JSON.stringify(body),
+        json: false,
         uri: '/'
       }).bind(this).then(this.parser.rpc);
     }).asCallback(callback);

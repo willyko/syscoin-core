@@ -25,7 +25,7 @@ function get(body, { headers = false, response } = {}) {
   if (body.error !== null) {
     throw new RpcError(
       _.get(body, 'error.code', -32603),
-      _.get(body, 'error.message', 'An error occurred while processing the RPC call to bitcoind')
+      _.get(body, 'error.message', 'An error occurred while processing the RPC call to syscoind')
     );
   }
 

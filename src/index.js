@@ -48,7 +48,7 @@ class Client {
     agentOptions,
     headers = false,
     host = 'localhost',
-    logger = debugnyan('bitcoin-core'),
+    logger = debugnyan('syscoin-core'),
     network = 'mainnet',
     password,
     port,

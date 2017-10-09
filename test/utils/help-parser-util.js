@@ -6,7 +6,7 @@
 import _ from 'lodash';
 
 /**
- * Parse `help` from bitcoin output.
+ * Parse `help` from syscoin output.
  */
 
 export default function parse(help) {

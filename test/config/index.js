@@ -16,22 +16,22 @@ function getHost(name) {
  */
 
 const config = {
-  bitcoind: {
-    host: getHost('bitcoind'),
-    password: 'bar',
-    port: 18333,
-    username: 'foo'
+  syscoind: {
+    host: getHost('syscoind'),
+    password: 'p',
+    port: 8336,
+    username: 'u'
   },
-  bitcoindSsl: {
-    host: getHost('bitcoind-ssl'),
-    password: 'bar',
-    port: 18334,
-    username: 'foo'
+  syscoindSsl: {
+    host: getHost('syscoind-ssl'),
+    password: 'p',
+    port: 8336,
+    username: 'u'
   },
-  bitcoindUsernameOnly: {
-    host: getHost('bitcoind-username-only'),
-    port: 18335,
-    username: 'foo'
+  syscoindUsernameOnly: {
+    host: getHost('syscoind-username-only'),
+    port: 8336,
+    username: 'u'
   }
 };
 

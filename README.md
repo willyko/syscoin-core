@@ -1,5 +1,5 @@
-# bitcoin-core
-A modern Bitcoin Core REST and RPC client to execute administrative tasks, wallet operations and queries about network and the blockchain.
+# syscoin-core
+A modern Syscoin Core REST and RPC client to execute administrative tasks, wallet operations and queries about network and the blockchain.
 
 ## Status
 [![npm version][npm-image]][npm-url] [![build status][travis-image]][travis-url]
@@ -8,7 +8,7 @@ A modern Bitcoin Core REST and RPC client to execute administrative tasks, walle
 Install the package via `npm`:
 
 ```sh
-npm install bitcoin-core --save
+npm install syscoin-core --save
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ npm install bitcoin-core --save
 1. `[agentOptions]` _(Object)_: Optional `agent` [options](https://github.com/request/request#using-optionsagentoptions) to configure SSL/TLS.
 2. `[headers=false]` _(boolean)_: Whether to return the response headers.
 3. `[host=localhost]` _(string)_: The host to connect to.
-4. `[logger=debugnyan('bitcoin-core')]` _(Function)_: Custom logger (by default, `debugnyan`).
+4. `[logger=debugnyan('syscoin-core')]` _(Function)_: Custom logger (by default, `debugnyan`).
 5. `[network=mainnet]` _(string)_: The network
 6. `[password]` _(string)_: The RPC server user password.
 7. `[port=[network]]` _(string)_: The RPC server port.
@@ -30,10 +30,10 @@ npm install bitcoin-core --save
 
 ### Examples
 #### Using network mode
-The `network` will automatically determine the port to connect to, just like the `bitcoind` and `bitcoin-cli` commands.
+The `network` will automatically determine the port to connect to, just like the `syscoind` and `syscoin-cli` commands.
 
 ```js
-const Client = require('bitcoin-core');
+const Client = require('syscoin-core');
 const client = new Client({ network: 'regtest' });
 ```
 
@@ -50,7 +50,7 @@ By default, when `ssl` is enabled, strict checking is implicitly enabled.
 const fs = require('fs');
 const client = new Client({
   agentOptions: {
-    ca: fs.readFileSync('/etc/ssl/bitcoind/cert.pem')),
+    ca: fs.readFileSync('/etc/ssl/syscoind/cert.pem')),
   },
   ssl: true
 });
@@ -80,7 +80,7 @@ client.getInfo((error, help) => console.log(help));
 ```
 
 #### Returning headers in the response
-For compatibility with other Bitcoin Core clients.
+For compatibility with other Syscoin Core clients.
 
 ```js
 const client = new Client({ headers: true });
@@ -127,22 +127,22 @@ client.getWork();
 To avoid potential issues with prototype references, all methods are still enumerable on the library client prototype.
 
 ### RPC
-Start the `bitcoind` with the RPC server enabled and optionally configure a username and password:
+Start the `syscoind` with the RPC server enabled and optionally configure a username and password:
 
 ```sh
-docker run --rm -it seegno/bitcoind:0.12-alpine -printtoconsole -rpcuser=foo -rpcpassword=bar -server
+docker run --rm -it seegno/syscoind:0.12-alpine -printtoconsole -rpcuser=foo -rpcpassword=bar -server
 ```
 
-These configuration values may also be set on the `bitcoin.conf` file of your platform installation.
+These configuration values may also be set on the `syscoin.conf` file of your platform installation.
 
 By default, port `8332` is used to listen for requests in `mainnet` mode, or `18332` in `testnet` or `regtest` modes. Use the `network` property to initialize the client on the desired mode and automatically set the respective default port. You can optionally set a custom port of your choice too.
 
 The RPC services binds to the localhost loopback network interface, so use `rpcbind` to change where to bind to and `rpcallowip` to whitelist source IP access.
 
 #### Methods
-All RPC [methods](src/methods.js) are exposed on the client interface as a camelcase'd version of those available on `bitcoind`.
+All RPC [methods](src/methods.js) are exposed on the client interface as a camelcase'd version of those available on `syscoind`.
 
-For a more complete reference about which methods are available, check the [RPC documentation](https://bitcoin.org/en/developer-reference#remote-procedure-calls-rpcs) on the [Bitcoin Core Developer Reference website](https://bitcoin.org/en/developer-reference).
+For a more complete reference about which methods are available, check the [RPC documentation](https://syscoin.org/en/developer-reference#remote-procedure-calls-rpcs) on the [Syscoin Core Developer Reference website](https://syscoin.org/en/developer-reference).
 
 ##### Examples
 
@@ -180,17 +180,17 @@ new Client().command(batch).then(([address, error]) => console.log(address, erro
 ```
 
 ### REST
-Support for the REST interface is still **experimental** and the API is still subject to change. These endpoints are also **unauthenticated** so [there are certain risks which you should be aware](https://github.com/bitcoin/bitcoin/blob/master/doc/REST-interface.md#risks), specifically of leaking sensitive data of the node if not correctly protected.
+Support for the REST interface is still **experimental** and the API is still subject to change. These endpoints are also **unauthenticated** so [there are certain risks which you should be aware](https://github.com/syscoin/bitcoin/blob/master/doc/REST-interface.md#risks), specifically of leaking sensitive data of the node if not correctly protected.
 
 Error handling is still fragile so avoid passing user input.
 
-Start the `bitcoind` with the REST server enabled:
+Start the `syscoind` with the REST server enabled:
 
 ```sh
-docker run --rm -it seegno/bitcoind:0.12-alpine -printtoconsole -server -rest
+docker run --rm -it seegno/syscoind:0.12-alpine -printtoconsole -server -rest
 ```
 
-These configuration values may also be set on the `bitcoin.conf` file of your platform installation. Use `txindex=1` if you'd like to enable full transaction query support (note: this will take a considerable amount of time on the first run).
+These configuration values may also be set on the `syscoin.conf` file of your platform installation. Use `txindex=1` if you'd like to enable full transaction query support (note: this will take a considerable amount of time on the first run).
 
 ### Methods
 #### getBlockByHash(hash, [options], [callback])
@@ -313,22 +313,22 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 3650 -nod
 ```
 
 #### Connecting via SSL
-On Bitcoin Core <0.12, you can start the `bitcoind` RPC server directly with SSL:
+On Syscoin Core <0.12, you can start the `syscoind` RPC server directly with SSL:
 
 ```sh
-docker run --rm -it -v $(PWD)/ssl:/etc/ssl seegno/bitcoind:0.11-alpine -printtoconsole -rpcuser=foo -rpcpassword=bar -rpcssl -rpcsslcertificatechainfile=/etc/ssl/bitcoind/cert.pem -rpcsslprivatekeyfile=/etc/ssl/bitcoind/key.pem -server
+docker run --rm -it -v $(PWD)/ssl:/etc/ssl seegno/syscoind:0.11-alpine -printtoconsole -rpcuser=foo -rpcpassword=bar -rpcssl -rpcsslcertificatechainfile=/etc/ssl/syscoind/cert.pem -rpcsslprivatekeyfile=/etc/ssl/syscoind/key.pem -server
 ```
 
-On Bitcoin Core >0.12, use must use `stunnel` (`brew install stunnel` or `sudo apt-get install stunnel4`) or an HTTPS reverse proxy to configure SSL since the built-in support for SSL has been removed. The trade off with `stunnel` is performance and simplicity versus features, as it lacks more powerful capacities such as Basic Authentication and caching which are standard in reverse proxies.
+On Syscoin Core >0.12, use must use `stunnel` (`brew install stunnel` or `sudo apt-get install stunnel4`) or an HTTPS reverse proxy to configure SSL since the built-in support for SSL has been removed. The trade off with `stunnel` is performance and simplicity versus features, as it lacks more powerful capacities such as Basic Authentication and caching which are standard in reverse proxies.
 
 You can use `stunnel` by configuring `stunnel.conf` with the following service requirements:
 
 ```
-[bitcoin]
+[syscoin]
 accept = 28332
 connect = 18332
-cert = /etc/ssl/bitcoind/cert.pem
-key = /etc/ssl/bitcoind/key.pem
+cert = /etc/ssl/syscoind/cert.pem
+key = /etc/ssl/syscoind/key.pem
 ```
 
 The `key` option may be omitted if you concatenating your private and public certificates into a single `stunnel.pem` file.
@@ -342,11 +342,11 @@ stunnel -d 28332 -r 127.0.0.1:18332 -p stunnel.pem -P ''
 Then pass the public certificate to the client:
 
 ```js
-const Client = require('bitcoin-core');
+const Client = require('syscoin-core');
 const fs = require('fs');
 const client = new Client({
   agentOptions: {
-    ca: fs.readFileSync('/etc/ssl/bitcoind/cert.pem')),
+    ca: fs.readFileSync('/etc/ssl/syscoind/cert.pem')),
   },
   port: 28332,
   ssl: true
@@ -355,13 +355,13 @@ const client = new Client({
 
 ## Logging
 
-By default, all requests made with `bitcoin-core` are logged using [seegno/debugnyan](https://github.com/seegno/debugnyan) with `bitcoin-core` as the logging namespace.
+By default, all requests made with `syscoin-core` are logged using [seegno/debugnyan](https://github.com/seegno/debugnyan) with `syscoin-core` as the logging namespace.
 
 Please note that all sensitive data is obfuscated before calling the logger.
 
 #### Example
 
-Example output defining the environment variable `DEBUG=bitcoin-core`:
+Example output defining the environment variable `DEBUG=syscoin-core`:
 
 ```javascript
 const client = new Client();
@@ -369,7 +369,7 @@ const client = new Client();
 client.getTransactionByHash('b4dd08f32be15d96b7166fd77afd18aece7480f72af6c9c7f9c5cbeb01e686fe');
 
 // {
-//   "name": "bitcoin-core",
+//   "name": "syscoin-core",
 //   "hostname": "localhost",
 //   "pid": 57908,
 //   "level": 20,
@@ -394,9 +394,9 @@ client.getTransactionByHash('b4dd08f32be15d96b7166fd77afd18aece7480f72af6c9c7f9c
 A custom logger can be passed via the `logger` option and it should implement [bunyan's log levels](https://github.com/trentm/node-bunyan#levels).
 
 ## Tests
-Currently the test suite is tailored for Docker (including `docker-compose`) due to the multitude of different `bitcoind` configurations that are required in order to get the test suite passing.
+Currently the test suite is tailored for Docker (including `docker-compose`) due to the multitude of different `syscoind` configurations that are required in order to get the test suite passing.
 
-To test using a local installation of `node.js` but with dependencies (e.g. `bitcoind`) running inside Docker:
+To test using a local installation of `node.js` but with dependencies (e.g. `syscoind`) running inside Docker:
 
 ```sh
 npm run dependencies
@@ -419,6 +419,6 @@ npm version [<newversion> | major | minor | patch] -m "Release %s"
 MIT
 
 [npm-image]: https://img.shields.io/npm/v/bitcoin-core.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/bitcoin-core
+[npm-url]: https://npmjs.org/package/syscoin-core
 [travis-image]: https://img.shields.io/travis/seegno/bitcoin-core.svg?style=flat-square
-[travis-url]: https://travis-ci.org/seegno/bitcoin-core
+[travis-url]: https://travis-ci.org/seegno/syscoin-core

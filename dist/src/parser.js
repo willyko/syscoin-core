@@ -9,6 +9,10 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
  * Module dependencies.
  */
 
+var _jsonBigint = require('json-bigint');
+
+var _jsonBigint2 = _interopRequireDefault(_jsonBigint);
+
 var _rpcError = require('./errors/rpc-error');
 
 var _rpcError2 = _interopRequireDefault(_rpcError);
@@ -18,6 +22,14 @@ var _lodash = require('lodash');
 var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * JSONBigInt parser.
+ */
+
+var _JSONBigInt = (0, _jsonBigint2.default)({ storeAsString: true, strict: true });
+
+const parse = _JSONBigInt.parse; // eslint-disable-line new-cap
 
 /**
  * Get response result and errors.
@@ -35,7 +47,7 @@ function get(body) {
   }
 
   if (body.error !== null) {
-    throw new _rpcError2.default(_lodash2.default.get(body, 'error.code', -32603), _lodash2.default.get(body, 'error.message', 'An error occurred while processing the RPC call to bitcoind'));
+    throw new _rpcError2.default(_lodash2.default.get(body, 'error.code', -32603), _lodash2.default.get(body, 'error.message', 'An error occurred while processing the RPC call to syscoind'));
   }
 
   if (!_lodash2.default.has(body, 'result')) {
@@ -76,6 +88,9 @@ class Parser {
     if (typeof body === 'string' && response.statusCode !== 200) {
       throw new _rpcError2.default(response.statusCode);
     }
+
+    // Parsing the body with custom parser to support BigNumbers.
+    body = parse(body);
 
     if (!Array.isArray(body)) {
       return get(body, { headers: this.headers, response: response });
