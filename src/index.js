@@ -81,10 +81,10 @@ class Client {
       unsupported = _.chain(methods)
         .pickBy(method => {
           let pick = false;
-          if(version) {
+          if (version) {
             pick = !semver.satisfies(version, method.version);
           }
-          if(sysversion) {
+          if (sysversion) {
             pick = !semver.satisfies(sysversion, method.sysversion);
           }
           return pick;

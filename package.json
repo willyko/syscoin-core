@@ -13,11 +13,7 @@
   "homepage": "https://github.com/syscoin/syscoin-core",
   "bugs": "https://github.com/syscoin/syscoin-core/issues",
   "license": "MIT",
-  "author": {
-    "name": "Rui Marinho",
-    "email": "rui.marinho@seegno.com",
-    "url": "http://seegno.com"
-  },
+  "author": {},
   "main": "dist/src/index.js",
   "repository": {
     "type": "git",
