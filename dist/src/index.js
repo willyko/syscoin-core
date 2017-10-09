@@ -98,7 +98,8 @@ class Client {
     var _ref$timeout = _ref.timeout;
     let timeout = _ref$timeout === undefined ? 30000 : _ref$timeout,
         username = _ref.username,
-        version = _ref.version;
+        version = _ref.version,
+        sysversion = _ref.sysversion;
 
     if (!_lodash2.default.has(networks, network)) {
       throw new Error(`Invalid network name "${network}"`, { network: network });
@@ -116,11 +117,20 @@ class Client {
       strict: _lodash2.default.get(ssl, 'strict', _lodash2.default.get(ssl, 'enabled', ssl))
     };
 
-    // Find unsupported methods according to version.
+    // Find unsupported methods according to version and sysversion.
     let unsupported = [];
 
-    if (version) {
-      unsupported = _lodash2.default.chain(_methods2.default).pickBy(method => !_semver2.default.satisfies(version, method.version)).keys().invokeMap(String.prototype.toLowerCase).value();
+    if (version || sysversion) {
+      unsupported = _lodash2.default.chain(_methods2.default).pickBy(method => {
+        let pick = false;
+        if (version) {
+          pick = !_semver2.default.satisfies(version, method.version);
+        }
+        if (sysversion) {
+          pick = !_semver2.default.satisfies(sysversion, method.sysversion);
+        }
+        return pick;
+      }).keys().invokeMap(String.prototype.toLowerCase).value();
     }
 
     const request = (0, _requestLogger2.default)(logger);
@@ -132,7 +142,7 @@ class Client {
       strictSSL: this.ssl.strict,
       timeout: this.timeout
     }), { multiArgs: true });
-    this.requester = new _requester2.default({ unsupported: unsupported, version: version });
+    this.requester = new _requester2.default({ sysversion: sysversion, unsupported: unsupported, version: version });
     this.parser = new _parser2.default({ headers: this.headers });
   }
 

@@ -55,7 +55,8 @@ class Client {
     ssl = false,
     timeout = 30000,
     username,
-    version
+    version,
+    sysversion
   } = {}) {
     if (!_.has(networks, network)) {
       throw new Error(`Invalid network name "${network}"`, { network });
@@ -73,12 +74,21 @@ class Client {
       strict: _.get(ssl, 'strict', _.get(ssl, 'enabled', ssl))
     };
 
-    // Find unsupported methods according to version.
+    // Find unsupported methods according to version and sysversion.
     let unsupported = [];
 
-    if (version) {
+    if (version || sysversion) {
       unsupported = _.chain(methods)
-        .pickBy(method => !semver.satisfies(version, method.version))
+        .pickBy(method => {
+          let pick = false;
+          if(version) {
+            pick = !semver.satisfies(version, method.version);
+          }
+          if(sysversion) {
+            pick = !semver.satisfies(sysversion, method.sysversion);
+          }
+          return pick;
+        })
         .keys()
         .invokeMap(String.prototype.toLowerCase)
         .value();
@@ -93,7 +103,7 @@ class Client {
       strictSSL: this.ssl.strict,
       timeout: this.timeout
     }), { multiArgs: true });
-    this.requester = new Requester({ unsupported, version });
+    this.requester = new Requester({ sysversion, unsupported, version });
     this.parser = new Parser({ headers: this.headers });
   }
 
