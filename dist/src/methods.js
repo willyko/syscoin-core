@@ -134,7 +134,12 @@ exports.default = {
   getZAddress: { sysversion: '>=2.1.6' },
   help: { version: '>=0.1.0' },
   importAddress: { version: '>=0.10.0' },
-  importMulti: { version: '>=0.14.0' },
+  importMulti: {
+    obfuscate: {
+      request: params => (0, _lodash.set)(params, '[0]', (0, _lodash.map)(params[0], request => (0, _lodash.set)(request, 'keys', (0, _lodash.map)(request.keys, () => '******'))))
+    },
+    version: '>=0.14.0'
+  },
   importPrivKey: {
     obfuscate: {
       request: () => ['******']

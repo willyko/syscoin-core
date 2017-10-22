@@ -86,7 +86,8 @@ class Parser {
 
     // Body contains HTML (e.g. 401 Unauthorized).
     if (typeof body === 'string' && response.statusCode !== 200) {
-      throw new _rpcError2.default(response.statusCode);
+      // support more detailed errors
+      throw new _rpcError2.default(response.statusCode, JSON.stringify(JSON.parse(response.body).error));
     }
 
     // Parsing the body with custom parser to support BigNumbers.
