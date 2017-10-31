@@ -1,6 +1,6 @@
 {
   "name": "syscoin-core",
-  "version": "1.2.2",
+  "version": "1.2.4",
   "description": "A modern Syscoin Core REST and RPC client.",
   "keywords": [
     "syscoin",
@@ -33,7 +33,7 @@
   "dependencies": {
     "@uphold/request-logger": "^1.2.0",
     "bluebird": "^3.4.1",
-    "debugnyan": "^1.0.0",
+    "bunyan": "^1.8.12",
     "json-bigint": "^0.2.0",
     "lodash": "^4.0.0",
     "request": "^2.53.0",

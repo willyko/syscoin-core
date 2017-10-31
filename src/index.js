@@ -7,7 +7,7 @@ import Parser from './parser';
 import Promise from 'bluebird';
 import Requester from './requester';
 import _ from 'lodash';
-import debugnyan from 'debugnyan';
+import bunyan from 'bunyan';
 import methods from './methods';
 import requestLogger from './logging/request-logger';
 import semver from 'semver';
@@ -48,7 +48,7 @@ class Client {
     agentOptions,
     headers = false,
     host = 'localhost',
-    logger = debugnyan('syscoin-core'),
+    logger = bunyan('syscoin-core'),
     network = 'mainnet',
     password,
     port,
