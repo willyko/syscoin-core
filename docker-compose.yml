@@ -25,7 +25,7 @@ syscoind:
     - 18333:18333
 
 syscoind-ssl:
-  image: seegno/docker-syscoind
+  image: willyko/docker-syscoind
   command:
     -printtoconsole
     -regtest=1
