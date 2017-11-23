@@ -5,12 +5,11 @@ sut:
   environment:
     - CI
   links:
-    - bitcoind
-    - bitcoind-ssl
-    - bitcoind-username-only
+    - syscoind
+    - syscoind-ssl
 
-bitcoind:
-  image: ruimarinho/bitcoin-core:0.15.0.1-alpine
+syscoind:
+  image: willyko/docker-syscoind
   command:
     -printtoconsole
     -regtest=1
@@ -25,8 +24,8 @@ bitcoind:
   ports:
     - 18333:18333
 
-bitcoind-ssl:
-  image: seegno/bitcoind:0.11-alpine
+syscoind-ssl:
+  image: seegno/docker-syscoind
   command:
     -printtoconsole
     -regtest=1
@@ -37,26 +36,11 @@ bitcoind-ssl:
     -rpcpassword=bar
     -rpcport=18334
     -rpcssl
-    -rpcsslcertificatechainfile=/etc/ssl/bitcoind/cert.pem
-    -rpcsslprivatekeyfile=/etc/ssl/bitcoind/key.pem
+    -rpcsslcertificatechainfile=/etc/ssl/syscoind/cert.pem
+    -rpcsslprivatekeyfile=/etc/ssl/syscoind/key.pem
     -rpcuser=foo
     -server
   volumes:
-    - ./test/config/ssl:/etc/ssl/bitcoind
+    - ./test/config/ssl:/etc/ssl/syscoind
   ports:
     - 18334:18334
-
-bitcoind-username-only:
-  image: seegno/bitcoind:0.11-alpine
-  command:
-    -printtoconsole
-    -regtest=1
-    -rest
-    -rpcallowip=10.211.0.0/16
-    -rpcallowip=172.17.0.0/16
-    -rpcallowip=192.168.0.0/16
-    -rpcport=18335
-    -rpcuser=foo
-    -server
-  ports:
-    - 18335:18335
